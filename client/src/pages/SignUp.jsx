@@ -50,7 +50,7 @@ const SignUp = () => {
         >
           <div>
             <h3 className='text-4xl pb-5 text-center leading-[1.125]'>
-              Create Your <HighLightText>Free </HighLightText>Account Now!!!
+              Create Your Account Now !
             </h3>
           </div>
 

@@ -118,6 +118,8 @@ exports.getAllQuizzes = async (req, res) => {
   }
 };
 
+
+
 // ✅
 exports.getQuizById = async (req, res) => {
   try {
@@ -150,6 +152,15 @@ exports.attemptQuiz = async (req, res) => {
     const userId = req.user.id;
     const { quizId, answers } = req.body;
 
+    // Check if the user has already attempted the quiz
+    const existingAttempt = await Attempt.findOne({ userId, quizId });
+    if (existingAttempt) {
+      return res.status(400).json({
+        success: false,
+        message: "You have already attempted this quiz.",
+      });
+    }
+
     const quiz = await Quiz.findById(quizId);
     if (!quiz) {
       return res.status(404).json({ success: false, error: "Quiz not found" });
@@ -180,39 +191,37 @@ exports.attemptQuiz = async (req, res) => {
       userId,
       quizId,
       score,
-      answers: answersArray,
+      answers,
+      completed: true, // Mark as completed
     });
+
     await attempt.save();
+    console.log("Attempt saved:", attempt);
 
+    // Update the user's attemptedQuizes array
     const user = await User.findById(userId);
-
-    if(!user.attemptedQuizes.includes(quizId)) {
+    if (!user.attemptedQuizes.includes(quizId)) {
       user.attemptedQuizes.push(quizId);
       await user.save();
+      console.log("User's attemptedQuizes updated:", user.attemptedQuizes);
     }
 
-    return res.status(200).json({
-      success: true,
-      success: "Quiz attempted successfully",
-      score,
-    });
-  } catch (e) {
-    console.error("ERROR ATTEMPTING QUIZ:", e.message);
-    return res.status(500).json({
-      success: false,
-      error: "Internal server error",
-    });
+    res.status(200).json({ success: true, message: "Quiz submitted successfully!" });
+  } catch (error) {
+    console.error("Error in attemptQuiz:", error);
+    res.status(500).json({ success: false, error: "Internal server error" });
   }
 };
+
 
 // ✅
 exports.getUserAttempts = async (req, res) => {
   try {
-    const userId = req.user.id; 
+    const userId = req.user.id;
 
     const attempts = await Attempt.find({ userId }).populate(
       "quizId",
-      "title description"
+      "title description _id"
     );
 
     return res.status(200).json({
@@ -227,6 +236,7 @@ exports.getUserAttempts = async (req, res) => {
     });
   }
 };
+
 
 // ✅
 exports.getAdminQuizes = async (req, res) => {

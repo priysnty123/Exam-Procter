@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { authMiddleware, adminMiddleware } = require("../middleware/Auth");
-
+const { restrictQuizAttempts } = require("../middleware/restrictQuizAttempts");
 // Import Controllers
 const {
   createQuiz,
@@ -27,7 +27,8 @@ const { login, register } = require("../controllers/userController");
 // User Authentication
 router.post("/login", login);
 router.post("/register", register);
-
+router.post("/:id/attempt", restrictQuizAttempts, attemptQuiz);
+router.post("/quizzes/:id/attempt", authMiddleware, restrictQuizAttempts, attemptQuiz);
 // Quiz routes
 router.get("/admin-quizzes", authMiddleware, adminMiddleware, getAdminQuizes);
 router.get("/attempts/:id", authMiddleware, adminMiddleware, getQuizAttempts);

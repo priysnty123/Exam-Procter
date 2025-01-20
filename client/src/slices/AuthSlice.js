@@ -17,17 +17,30 @@ const authSlice = createSlice({
   name: "auth",
   initialState: initialState,
   reducers: {
-    setToken(state, value) {
-      state.token = value.payload;
-      localStorage.setItem("token", value.payload);
+    setToken(state, action) {
+      state.token = action.payload;
+      localStorage.setItem("token", action.payload);
     },
-    setUser(state, value) {
-      state.user = value.payload;
-      localStorage.setItem("user", JSON.stringify(value.payload));
+    setUser(state, action) {
+      state.user = action.payload;
+      localStorage.setItem("user", JSON.stringify(action.payload));
+    },
+    markQuizAsAttempted(state, action) {
+      if (state.user) {
+        const quizId = action.payload;
+
+        // Update the attemptedQuizzes array
+        state.user.attemptedQuizzes = state.user.attemptedQuizzes
+          ? [...state.user.attemptedQuizzes, quizId]
+          : [quizId];
+
+        // Save the updated user object to localStorage
+        localStorage.setItem("user", JSON.stringify(state.user));
+      }
     },
   },
 });
 
-export const { setToken, setUser } = authSlice.actions;
+export const { setToken, setUser, markQuizAsAttempted } = authSlice.actions;
 
 export default authSlice.reducer;

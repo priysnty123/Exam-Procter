@@ -1,32 +1,53 @@
-import React, { useEffect, useState } from 'react'
-import { quizEndpoints } from '../../../services/APIs'
-import { apiConnector } from '../../../services/apiConnector'
-import { useSelector } from 'react-redux'
-import { formatDistanceToNow } from 'date-fns'
+import React, { useEffect, useState } from 'react';
+import { quizEndpoints } from '../../../services/APIs';
+import { apiConnector } from '../../../services/apiConnector';
+import { useSelector } from 'react-redux';
+import { formatDistanceToNow } from 'date-fns';
+import * as XLSX from 'xlsx'; // Import xlsx for spreadsheet generation
 
 const Score = ({ quiz }) => {
-
-    const [scores, setScores] = useState([])
-    const [loading, setLoading] = useState(true)
-    const { token } = useSelector(state => state.auth)
+    const [scores, setScores] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const { token } = useSelector(state => state.auth);
 
     useEffect(() => {
         const fetchScores = async () => {
             try {
                 const response = await apiConnector("GET", `${quizEndpoints.GET_SCORES}/${quiz._id}`, null, {
-                    Authorization: `Bearer ${token}`
-                })
-                // console.log("res : ", response)
-                setScores(response?.data?.data)
+                    Authorization: `Bearer ${token}`,
+                });
+                setScores(response?.data?.data);
             } catch (error) {
-                console.log("error : ", error)
+                console.log("error : ", error);
             } finally {
-                setLoading(false)
+                setLoading(false);
             }
-        }
+        };
 
-        fetchScores()
-    }, [])
+        fetchScores();
+    }, [quiz._id, token]);
+
+    // Function to generate and download the spreadsheet
+    const generateSpreadsheet = () => {
+        // Prepare data for the spreadsheet
+        const data = scores.map((score, index) => ({
+            Username: score?.userId?.username || 'Unknown',
+            Score: score?.score || 0,
+            Total_Questions: score?.answers?.length || 0,
+            Percentage: ((score?.score / score.answers.length) * 100).toFixed(2) + '%',
+            Date: new Date(score?.createdAt).toLocaleString(),
+        }));
+
+        // Create a new workbook and worksheet
+        const workbook = XLSX.utils.book_new();
+        const worksheet = XLSX.utils.json_to_sheet(data);
+
+        // Append the worksheet to the workbook
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Results');
+
+        // Write the workbook and trigger download
+        XLSX.writeFile(workbook, `QuizResults_${quiz.title}.xlsx`);
+    };
 
     return (
         <div className='bg-slate-900 z-[2] w-full rounded-lg py-5 flex flex-col gap-1 text-xl'>
@@ -57,13 +78,22 @@ const Score = ({ quiz }) => {
                                 </div>
                             ))
                         }
+                        {/* Button to generate the spreadsheet */}
+                        <div className="flex justify-center mt-4">
+                            <button
+                                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+                                onClick={generateSpreadsheet}
+                            >
+                                Download Results as Spreadsheet
+                            </button>
+                        </div>
                     </div>
                 ) : (
                     <p className='text-center'>No scores found</p>
                 )
             }
         </div>
-    )
-}
+    );
+};
 
-export default Score
+export default Score;

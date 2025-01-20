@@ -1,13 +1,10 @@
 const express = require("express");
 const app = express();
 require("dotenv").config();
-
 const routes = require("./routes/routes");
 const cookieParser = require("cookie-parser");
-
 const database = require("./config/database");
 const cors = require("cors");
-
 const PORT = process.env.PORT || 4000;
 
 // connect to db
@@ -17,7 +14,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN,
+    origin: process.env.CORS_ORIGIN.split(","),
     credentials: true,
     maxAge: 14400,
   })
