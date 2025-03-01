@@ -23,7 +23,7 @@ const AttemptCard = ({ item }) => {
             {/* Show Quiz Completion Status */}
             <span className='mt-3'>
                 {isQuizCompleted ? (
-                    <h3 className='text-green-500 text-sm md:text-base font-semibold'>Quiz Completed</h3>
+                    <h3 className='text-blue-500 text-sm md:text-base font-semibold'>Quiz Completed</h3>
                 ) : (
                     <h3 className='text-red-500 text-sm md:text-base font-semibold'>Quiz Not Completed</h3>
                 )}

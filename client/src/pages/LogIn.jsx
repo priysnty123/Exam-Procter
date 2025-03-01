@@ -8,6 +8,7 @@ import { login } from '../services/operations/AuthAPIs'
 import HighLightText from '../components/HighLightText'
 import { TbEyeClosed, TbEyeCheck } from "react-icons/tb";
 import toast from 'react-hot-toast'
+import kodeImage from '../assests/kode.png'
 
 
 const LogIn = () => {
@@ -37,7 +38,15 @@ const LogIn = () => {
   return (
     <div className='min-h-screen flex items-center justify-center '>
       <section>
-        <h1 className='text-center pb-5 text-4xl font-mono underline'>Quizzy </h1>
+        {/* <h1 className='text-center pb-5 text-4xl font-mono underline'>Quizzy </h1> */}
+        <div className='text-center pb-5'>
+          <img
+            src={kodeImage} 
+            alt="Quizzy Logo"
+            style={{ width: "200px", height: "auto" }} // Adjust width as needed
+            className="mx-auto"
+          />
+        </div>
         <form
           onSubmit={handleSubmit(submitHandler)}
           className='flex flex-col gap-y-3 max-w-[480px] shadow-lg shadow-blue-300  border p-10 rounded-lg'
@@ -96,7 +105,7 @@ const LogIn = () => {
             <Button disabled={loading} varient={"primary"} type={"submit"}>Submit</Button>
           </span>
 
-          <p className='text-center mt-3'>Don't have an account? <span onClick={() => navigate("/signup")} className=' cursor-pointer text-green-500'>Sign Up</span></p>
+          <p className='text-center mt-3'>Don't have an account? <span onClick={() => navigate("/signup")} className=' cursor-pointer text-blue-500'>Sign Up</span></p>
 
         </form>
       </section >

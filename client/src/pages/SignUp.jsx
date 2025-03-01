@@ -7,7 +7,7 @@ import RequiredError from '../components/RequiredError'
 import { signUp } from '../services/operations/AuthAPIs'
 import HighLightText from '../components/HighLightText'
 import { TbEyeClosed, TbEyeCheck } from "react-icons/tb";
-
+import kodeImage from '../assests/kode.png'
 
 const SignUp = () => {
 
@@ -43,7 +43,15 @@ const SignUp = () => {
   return (
     <div className='min-h-screen flex items-center justify-center'>
       <section>
-        <h1 className='text-center pb-5 text-4xl font-mono underline'>Quizzy </h1>
+        {/* <h1 className='text-center pb-5 text-4xl font-mono underline'>Quizzy </h1> */}
+        <div className='text-center pb-5'>
+  <img
+    src={kodeImage} 
+    alt="Quizzy Logo"
+    style={{ width: "200px", height: "auto" }} // Adjust width as needed
+    className="mx-auto"
+  />
+</div>
         <form
           onSubmit={handleSubmit(submitHandler)}
           className='flex flex-col gap-y-3 max-w-[480px] shadow-lg shadow-blue-300 border p-10 rounded-lg'
@@ -140,7 +148,7 @@ const SignUp = () => {
           <span className='flex border border-slate-600 p-1 cursor-pointer w-max gap-3 rounded-full'>
             <button
               type="button"
-              className={`${role === "user" ? "bg-green-700" : "bg-transparent"} px-3 rounded-full`}
+              className={`${role === "user" ? "bg-blue-700" : "bg-transparent"} px-3 rounded-full`}
               onClick={(e) => {
                 e.preventDefault();
                 setValue("role", "user");
@@ -150,7 +158,7 @@ const SignUp = () => {
             </button>
             <button
               type="button"
-              className={`${role === "admin" ? "bg-green-700" : "bg-transparent"} px-3 rounded-full`}
+              className={`${role === "admin" ? "bg-blue-700" : "bg-transparent"} px-3 rounded-full`}
               onClick={(e) => {
                 e.preventDefault();
                 setValue("role", "admin");
@@ -164,7 +172,7 @@ const SignUp = () => {
             <Button disabled={loading} varient={"primary"} type={"submit"}>Submit</Button>
           </span>
 
-          <p className='text-center mt-3'>Already have an account? <span onClick={() => navigate("/login")} className='text-green-500 cursor-pointer'>Log in</span></p>
+          <p className='text-center mt-3'>Already have an account? <span onClick={() => navigate("/login")} className='text-blue-500 cursor-pointer'>Log in</span></p>
 
         </form>
       </section >

@@ -58,8 +58,8 @@ const Score = ({ quiz }) => {
                     <div className=' border rounded-lg border-slate-600 overflow-hidden'>
                         <h3 className='px-3 text-2xl bg-slate-600 py-2 text-center'>Results</h3>
                         <div className='flex justify-between px-5 py-3'>
-                            <p className='text-green-600'>Username</p>
-                            <p className='text-green-600'>Score</p>
+                            <p className='text-blue-600'>Username</p>
+                            <p className='text-blue-600'>Score</p>
                         </div>
                         {
                             [...scores].reverse().map((score, index) => (
